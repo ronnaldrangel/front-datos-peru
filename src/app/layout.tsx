@@ -19,8 +19,7 @@ export const metadata: Metadata = {
   description: "Integra la API de consultas más rápida del Perú. Consulta RUC, DNI, placas, SOAT, licencias y CDR Sunat en segundos. Empieza gratis con DatosPeru.net.",
 };
 import { ThemeProvider } from "@/components/theme-provider";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
+import { LayoutWrapper } from "@/components/layout-wrapper";
 
 export default function RootLayout({
   children,
@@ -40,11 +39,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="flex-1">
+          <LayoutWrapper>
             {children}
-          </main>
-          <Footer />
+          </LayoutWrapper>
         </ThemeProvider>
       </body>
     </html>

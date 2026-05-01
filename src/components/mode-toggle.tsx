@@ -7,23 +7,32 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 
 export function ModeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+
+  // Avoid hydration mismatch by only rendering after mounting
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const toggleTheme = () => {
-    // Determine the current active theme, defaulting to 'light' if not resolved yet
-    const currentTheme = resolvedTheme || theme || "light"
-    setTheme(currentTheme === "dark" ? "light" : "dark")
+    const targetTheme = resolvedTheme === "dark" ? "light" : "dark"
+    setTheme(targetTheme)
+    console.log(`[Theme] Switching to ${targetTheme}. Current IP access might require a moment for localStorage to sync.`)
   }
 
   return (
     <Button 
       variant="outline" 
       size="icon" 
-      className="border-border text-muted-foreground hover:text-foreground bg-background hover:bg-muted transition-colors rounded-xl font-medium shadow-sm hover:shadow-md"
+      className="border-border text-foreground bg-background hover:bg-muted transition-all rounded-xl font-medium shadow-sm hover:shadow-md relative overflow-hidden group"
       onClick={toggleTheme}
+      title="Cambiar tema"
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <div className="relative h-[1.2rem] w-[1.2rem] flex items-center justify-center">
+        <Sun className={`h-[1.2rem] w-[1.2rem] transition-all duration-300 ${mounted && resolvedTheme === "dark" ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"}`} />
+        <Moon className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-300 ${mounted && resolvedTheme === "dark" ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"}`} />
+      </div>
       <span className="sr-only">Cambiar tema</span>
     </Button>
   )

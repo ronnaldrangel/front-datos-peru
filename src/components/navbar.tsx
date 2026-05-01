@@ -38,12 +38,16 @@ export function Navbar() {
 
         <div className="flex items-center gap-4">
           <ModeToggle />
-          <Button variant="outline" className="hidden md:inline-flex rounded-full px-6 border-border hover:bg-muted text-foreground font-medium">
-            Ingresar
-          </Button>
-          <Button className="hidden md:inline-flex rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-medium shadow-md shadow-primary/20">
-            Empieza ahora
-          </Button>
+          <Link href="/login">
+            <Button variant="outline" className="hidden md:inline-flex rounded-full px-6 border-border hover:bg-muted text-foreground font-medium">
+              Ingresar
+            </Button>
+          </Link>
+          <Link href="/register">
+            <Button className="hidden md:inline-flex rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-medium shadow-md shadow-primary/20">
+              Empieza ahora
+            </Button>
+          </Link>
 
           <Sheet>
             <SheetTrigger render={
@@ -67,8 +71,12 @@ export function Navbar() {
                 <Link href="#" className="text-lg font-medium text-muted-foreground hover:text-primary">Documentación</Link>
                 <Link href="/precios" className="text-lg font-medium text-muted-foreground hover:text-primary">Precios</Link>
                 <div className="border-t border-muted my-4"></div>
-                <Button variant="outline" className="w-full rounded-full border-border">Iniciar sesión</Button>
-                <Button className="w-full rounded-full bg-primary hover:bg-primary/90 text-white">Empieza ahora</Button>
+                <Link href="/login">
+                  <Button variant="outline" className="w-full rounded-full border-border">Iniciar sesión</Button>
+                </Link>
+                <Link href="/register">
+                  <Button className="w-full rounded-full bg-primary hover:bg-primary/90 text-white">Empieza ahora</Button>
+                </Link>
               </div>
             </SheetContent>
           </Sheet>
