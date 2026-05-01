@@ -25,43 +25,26 @@ import {
   BookOpenIcon,
   CodeIcon,
   ShieldCheckIcon,
-  GlobeIcon
+  GlobeIcon,
+  MessageSquareIcon
 } from "lucide-react"
 
 const navMain = [
   {
-    title: "Dashboard",
+    title: "API Consultas",
     url: "/dashboard",
     icon: <LayoutDashboardIcon />,
     isActive: true,
   },
   {
-    title: "Servicios API",
-    url: "#",
-    icon: <DatabaseIcon />,
-    items: [
-      {
-        title: "Consulta DNI",
-        url: "#",
-      },
-      {
-        title: "Consulta RUC",
-        url: "#",
-      },
-      {
-        title: "Consulta SOAT",
-        url: "#",
-      },
-      {
-        title: "Consulta MTC",
-        url: "#",
-      },
-    ],
+    title: "API WhatsApp",
+    url: "https://wazend.net/",
+    icon: <MessageSquareIcon />,
   },
   {
-    title: "Mis Consultas",
+    title: "API",
     url: "#",
-    icon: <SearchIcon />,
+    icon: <CodeIcon />,
   },
 ]
 
@@ -72,27 +55,22 @@ const navSecondary = [
     icon: <BookOpenIcon />,
   },
   {
-    title: "Ejemplos Code",
+    title: "Soporte",
     url: "#",
-    icon: <CodeIcon />,
-  },
-  {
-    title: "Estado del Sistema",
-    url: "#",
-    icon: <ShieldCheckIcon />,
+    icon: <CircleHelpIcon />,
   },
 ]
 
 const documents = [
   {
-    name: "API Reference",
-    url: "#",
-    icon: <FileChartColumnIcon />,
+    name: "Configuración",
+    url: "/dashboard/settings",
+    icon: <Settings2Icon />,
   },
   {
-    name: "Webhooks",
+    name: "Estado de servicio",
     url: "#",
-    icon: <GlobeIcon />,
+    icon: <ShieldCheckIcon />,
   },
 ]
 
@@ -128,7 +106,7 @@ export function AppSidebar({ user, onLogout, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
-        <NavDocuments items={documents} />
+        <NavDocuments items={documents} title="Servicios" />
         <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
