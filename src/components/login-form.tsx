@@ -35,7 +35,9 @@ export function LoginForm({
       const response = await authApi.login(formData)
       localStorage.setItem('token', response.token)
       localStorage.setItem('user', JSON.stringify(response.user))
-      router.push('/')
+      // Set cookie for middleware
+      document.cookie = `token=${response.token}; path=/; max-age=86400; SameSite=Lax`
+      router.push('/dashboard')
     } catch (err: any) {
       setError(err.message)
     } finally {
