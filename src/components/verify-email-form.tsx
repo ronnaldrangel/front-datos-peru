@@ -1,58 +1,75 @@
+"use client"
+
+import { useEffect, useState, Suspense } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Field,
-  FieldDescription,
   FieldGroup,
 } from "@/components/ui/field"
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-  InputOTPSeparator,
-} from "@/components/ui/input-otp"
-import Link from "next/link"
+import { authApi } from "@/lib/api"
+import { CheckCircle2, XCircle, Loader2 } from "lucide-react"
 
-export function VerifyEmailForm({
-  className,
-  ...props
-}: React.ComponentProps<"form">) {
+function VerifyEmailContent({ className, ...props }: React.ComponentProps<"div">) {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const token = searchParams.get("token")
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
+  const [message, setMessage] = useState("Verificando tu cuenta...")
+
+  useEffect(() => {
+    if (!token) {
+      setStatus("loading")
+      setMessage("Hemos enviado un correo de verificación. Por favor revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.")
+      return
+    }
+
+    const verify = async () => {
+      try {
+        const response = await authApi.verifyEmail(token)
+        setStatus("success")
+        setMessage(response.message)
+        setTimeout(() => router.push("/login"), 3000)
+      } catch (err: any) {
+        setStatus("error")
+        setMessage(err.message)
+      }
+    }
+
+    verify()
+  }, [token, router])
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
-        <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Verifica tu correo</h1>
+        <div className="flex flex-col items-center gap-4 text-center">
+          {status === "loading" && <Loader2 className="h-12 w-12 animate-spin text-primary" />}
+          {status === "success" && <CheckCircle2 className="h-12 w-12 text-green-500" />}
+          {status === "error" && <XCircle className="h-12 w-12 text-red-500" />}
+          
+          <h1 className="text-2xl font-bold">Verificación de cuenta</h1>
           <p className="text-sm text-balance text-muted-foreground">
-            Hemos enviado un código de 6 dígitos a tu correo. Ingrésalo a continuación para activar tu cuenta.
+            {message}
           </p>
         </div>
-        <div className="flex w-full justify-center py-2">
-          <InputOTP maxLength={6}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPSeparator />
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
-        <Field>
-          <Button type="submit" className="w-full">Verificar cuenta</Button>
-        </Field>
-        <Field>
-          <FieldDescription className="text-center">
-            ¿No recibiste el código?{" "}
-            <button type="button" className="underline underline-offset-4 font-medium">
-              Reenviar código
-            </button>
-          </FieldDescription>
-        </Field>
+        
+        {status !== "loading" && (
+          <Field>
+            <Button className="w-full" onClick={() => router.push("/login")}>
+              Ir al inicio de sesión
+            </Button>
+          </Field>
+        )}
       </FieldGroup>
-    </form>
+    </div>
+  )
+}
+
+export function VerifyEmailForm(props: React.ComponentProps<"div">) {
+  return (
+    <Suspense fallback={<Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />}>
+      <VerifyEmailContent {...props} />
+    </Suspense>
   )
 }
